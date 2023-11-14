@@ -21,14 +21,11 @@ def generate_figures():
     draw = ImageDraw.Draw(image02)
 
     # Define the coordinates for the lines
-    top_middle = (image_size[0] // 2, 0)
     right_middle = (image_size[0], image_size[1] // 2)
     left_middle = (0, image_size[1] // 2)
     bottom_middle = (image_size[0] // 2, image_size[1])
     bottom_right = (image_size[0], image_size[1])
     bottom_left = (0, image_size[1])
-    top_left = (0, 0)
-    top_right = (0, image_size[1])
 
     triangle_coords_bottom = [
         left_middle,
@@ -38,23 +35,11 @@ def generate_figures():
         bottom_middle
     ]
 
-    rectangle_coords_bottom= [
+    rectangle_coords_bottom = [
         left_middle,
         right_middle,
         bottom_right,
         bottom_left
-    ]
-
-    triangle_coords_top_left = [
-        left_middle,
-        top_middle,
-        top_left,
-    ]
-
-    triangle_coords_top_right = [
-        right_middle,
-        top_middle,
-        top_right,
     ]
 
     # Draw triangles in the corners
@@ -86,7 +71,7 @@ def generate_figures():
     inverted_image13 = ImageOps.invert(rotated_image03)
     inverted_image13.save("figure13.png")
 
-    #Another draws
+    # Another draws
     # Create a white square image06
     image06 = Image.new("RGB", image_size, "white")
     draw = ImageDraw.Draw(image06)
