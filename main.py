@@ -189,4 +189,4 @@ def create_combinations_version2():
 if __name__ == '__main__':
     generate_box()
     generate_figures()
-    # create_combinations_version2()
+    create_combinations_version2()
