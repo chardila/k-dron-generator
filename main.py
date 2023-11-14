@@ -1,24 +1,27 @@
 from PIL import Image, ImageDraw, ImageOps
 
 
-def generate_box(p_color, p_namefile):
+def generate_box():
     # Set the image size
     image_size = (2000, 2000)
 
     # Create a black square image
-    image = Image.new("RGB", image_size, p_color)
+    image01 = Image.new("RGB", image_size, "white")
 
     # Save the image as "figure01.png"
-    image.save(p_namefile)
+    image01.save("figure01.png")
 
+    # Invert the colors (swap black and white)
+    inverted_image14 = ImageOps.invert(image01)
+    inverted_image14.save("figure14.png")
 
 def generate_figures():
-    # Set the image02 size
+    # Set the image size
     image_size = (2000, 2000)
 
-    # Create a white square image02
-    image02 = Image.new("RGB", image_size, "white")
-    draw = ImageDraw.Draw(image02)
+    # Create a white square image
+    image = Image.new("RGB", image_size, "white")
+    draw = ImageDraw.Draw(image)
 
     # Define the coordinates for the lines
     right_middle = (image_size[0], image_size[1] // 2)
@@ -45,46 +48,36 @@ def generate_figures():
     # Draw triangles in the corners
     draw.polygon(triangle_coords_bottom, fill="black")
 
-    # Save the image02
-    image02.save("figure02.png")
+    # Save the image
+    image.save("figure02.png")
 
     # Invert the colors (swap black and white)
-    inverted_image12 = ImageOps.invert(image02)
-    inverted_image12.save("figure12.png")
+    inverted_image = ImageOps.invert(image)
+    inverted_image.save("figure12.png")
 
-    # Rotate the image02 90 degrees to the left
-    rotated_image05 = image02.rotate(90, expand=True)
-    rotated_image05.save("figure05.png")
-
-    inverted_image11 = ImageOps.invert(rotated_image05)
-    inverted_image11.save("figure11.png")
-
-    rotated_image04 = rotated_image05.rotate(90, expand=True)
-    rotated_image04.save("figure04.png")
-
-    inverted_image10 = ImageOps.invert(rotated_image04)
-    inverted_image10.save("figure10.png")
-
-    rotated_image03 = rotated_image04.rotate(90, expand=True)
-    rotated_image03.save("figure03.png")
-
-    inverted_image13 = ImageOps.invert(rotated_image03)
-    inverted_image13.save("figure13.png")
+    # Rotate and save the images
+    for i in range(3):
+        rotated_image = image.rotate(90 * (i+1), expand=True)
+        rotated_image.save(f"figure0{i+3}.png")
+        inverted_image = ImageOps.invert(rotated_image)
+        inverted_image.save(f"figure1{i+1}.png")
 
     # Another draws
-    # Create a white square image06
+    # Create a white square image
     image06 = Image.new("RGB", image_size, "white")
     draw = ImageDraw.Draw(image06)
 
     # Draw rectangles in the corners
     draw.polygon(rectangle_coords_bottom, fill="black")
 
-    # Save the image06
+    # Save the image
     image06.save("figure06.png")
 
+    # Invert the colors (swap black and white)
     inverted_image08 = ImageOps.invert(image06)
     inverted_image08.save("figure08.png")
 
+    # Rotate and save the image
     rotated_image09 = image06.rotate(90, expand=True)
     rotated_image09.save("figure09.png")
 
@@ -94,7 +87,5 @@ def generate_figures():
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    generate_box("black", "figure14.png")
-    generate_box("white", "figure01.png")
-
+    generate_box()
     generate_figures()
