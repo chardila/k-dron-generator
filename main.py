@@ -1,4 +1,5 @@
 from PIL import Image, ImageDraw, ImageOps
+import os
 
 
 def generate_box():
@@ -84,8 +85,47 @@ def generate_figures():
     inverted_image07 = ImageOps.invert(rotated_image09)
     inverted_image07.save("figure07.png")
 
+def create_combinations():
+
+    # Get the current working directory as the folder path
+    base_folder = os.getcwd()
+
+    # Create the "output" folder if it doesn't exist
+    output_folder = os.path.join(base_folder, "output")
+    os.makedirs(output_folder, exist_ok=True)
+
+    # Get a list of file names in the specified folder
+    file_names = [filename for filename in os.listdir(base_folder) if filename.startswith("figure") and filename.endswith(".png")]
+
+    # Open all images and store them in a list
+    images = [Image.open(os.path.join(base_folder, file_name)) for file_name in file_names]
+
+    # Loop through all combinations of 4 files
+    for i in range(len(images) - 3):
+        for j in range(i + 1, len(images) - 2):
+            for k in range(j + 1, len(images) - 1):
+                for l in range(k + 1, len(images)):
+                    # Create a new image with a 2x2 grid
+                    combined_width = images[i].width * 2
+                    combined_height = images[i].height * 2
+                    combined_image = Image.new("RGB", (combined_width, combined_height))
+
+                    # Paste the images into the grid
+                    combined_image.paste(images[i], (0, 0))
+                    combined_image.paste(images[j], (images[i].width, 0))
+                    combined_image.paste(images[k], (0, images[i].height))
+                    combined_image.paste(images[l], (images[i].width, images[i].height))
+
+                    # Save the combined image with a new name to the "output" folder
+                    combination_name = f"combination_{i}_{j}_{k}_{l}.png"
+                    combination_path = os.path.join(output_folder, combination_name)
+                    combined_image.save(combination_path)
+    # Close all opened images
+    for image in images:
+        image.close()
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     generate_box()
     generate_figures()
+    create_combinations()
