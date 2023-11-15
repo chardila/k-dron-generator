@@ -88,7 +88,6 @@ def generate_figures():
 
 
 def create_combinations():
-    content_hashes = {}
 
     # Get the current working directory as the folder path
     base_folder = os.getcwd()
@@ -120,26 +119,19 @@ def create_combinations():
                     combined_image.paste(images[k], (0, images[i].height))
                     combined_image.paste(images[l], (images[i].width, images[i].height))
 
-                    hash_value = hash(combined_image.tobytes())
                     combination_name = f"combination_{i}_{j}_{k}_{l}.png"
                     combination_path = os.path.join(output_folder, combination_name)
 
-                    if hash_value not in content_hashes:
-                        # Save the combined image with a new name to the "output" folder
-                        combined_image.save(combination_path)
-                        print(f"Creating file: {combination_name}")
+                    # Save the combined image with a new name to the "output" folder
+                    combined_image.save(combination_path)
+                    print(f"Creating file: {combination_name}")
 
-                        # Store the content hash in the dictionary along with the file name
-                        content_hashes[hash_value] = combination_name
-                    else:
-                        print(f"Skipping duplicate: {combination_name}")
     # Close all opened images
     for image in images:
         image.close()
 
 
 def create_combinations_version2():
-    content_hashes = {}
 
     # Get the current working directory as the base folder path
     base_folder = os.getcwd()
@@ -190,16 +182,11 @@ def create_combinations_version2():
             # Save the combined image with a new name to the "output" folder
             combination_name = f"combination_1x2_{i}_{j}.png"
             combination_path = os.path.join(output_folder, combination_name)
+            combined_image.save(combination_path)
 
-            if hash_value not in content_hashes:
-                combined_image.save(combination_path)
+            print(f"Creating file: {combination_name}")
 
-                print(f"Creating file: {combination_name}")
-
-                # Store the content hash in the dictionary along with the file name
-                content_hashes[hash_value] = combination_name
-            else:
-                print(f"Skipping duplicate: {combination_name}")
+            # Store the content hash in the dictionary along with the file name
 
     # Close all opened images
     for image in images:
