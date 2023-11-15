@@ -1,5 +1,6 @@
 from PIL import Image, ImageDraw, ImageOps
 import os
+from itertools import permutations
 
 
 def generate_box():
@@ -88,7 +89,6 @@ def generate_figures():
 
 
 def create_combinations():
-
     # Get the current working directory as the folder path
     base_folder = os.getcwd()
 
@@ -104,22 +104,22 @@ def create_combinations():
     images = [Image.open(os.path.join(base_folder, file_name)) for file_name in file_names]
 
     # Loop through all combinations of 4 files
-    for i in range(len(images) - 3):
-        for j in range(i + 1, len(images) - 2):
-            for k in range(j + 1, len(images) - 1):
-                for l in range(k + 1, len(images)):
+    for cont_i in range(len(images) - 3):
+        for cont_j in range(cont_i + 1, len(images) - 2):
+            for cont_k in range(cont_j + 1, len(images) - 1):
+                for cont_l in range(cont_k + 1, len(images)):
                     # Create a new image with a 2x2 grid
-                    combined_width = images[i].width * 2
-                    combined_height = images[i].height * 2
+                    combined_width = images[cont_i].width * 2
+                    combined_height = images[cont_i].height * 2
                     combined_image = Image.new("RGB", (combined_width, combined_height))
 
                     # Paste the images into the grid
-                    combined_image.paste(images[i], (0, 0))
-                    combined_image.paste(images[j], (images[i].width, 0))
-                    combined_image.paste(images[k], (0, images[i].height))
-                    combined_image.paste(images[l], (images[i].width, images[i].height))
+                    combined_image.paste(images[cont_i], (0, 0))
+                    combined_image.paste(images[cont_j], (images[cont_i].width, 0))
+                    combined_image.paste(images[cont_k], (0, images[cont_i].height))
+                    combined_image.paste(images[cont_l], (images[cont_i].width, images[cont_i].height))
 
-                    combination_name = f"combination_{i}_{j}_{k}_{l}.png"
+                    combination_name = f"combination_{cont_i}_{cont_j}_{cont_k}_{cont_l}.png"
                     combination_path = os.path.join(output_folder, combination_name)
 
                     # Save the combined image with a new name to the "output" folder
@@ -132,7 +132,6 @@ def create_combinations():
 
 
 def create_combinations_version2():
-
     # Get the current working directory as the base folder path
     base_folder = os.getcwd()
 
@@ -151,36 +150,34 @@ def create_combinations_version2():
     combinations_2x1 = []
 
     # Create combinations of 2 files in a 2x1 grid
-    for i in range(len(images) - 1):
-        for j in range(i + 1, len(images)):
+    for cont_i in range(len(images) - 1):
+        for cont_j in range(cont_i + 1, len(images)):
             # Create a new image with a 2x1 grid
-            combined_width = max(images[i].width, images[j].width)
-            combined_height = images[i].height + images[j].height
+            combined_width = max(images[cont_i].width, images[cont_j].width)
+            combined_height = images[cont_i].height + images[cont_j].height
             combined_image = Image.new("RGB", (combined_width, combined_height))
 
             # Paste the images into the grid
-            combined_image.paste(images[i], (0, 0))
-            combined_image.paste(images[j], (0, images[i].height))
+            combined_image.paste(images[cont_i], (0, 0))
+            combined_image.paste(images[cont_j], (0, images[cont_i].height))
 
             # Append the combined image to the list
             combinations_2x1.append(combined_image)
 
     # Create combinations of 2x1 images in a 1x2 grid
-    for i in range(len(combinations_2x1) - 1):
-        for j in range(i + 1, len(combinations_2x1)):
+    for cont_i in range(len(combinations_2x1) - 1):
+        for cont_j in range(cont_i + 1, len(combinations_2x1)):
             # Create a new image with a 1x2 grid
-            combined_width = combinations_2x1[i].width + combinations_2x1[j].width
-            combined_height = max(combinations_2x1[i].height, combinations_2x1[j].height)
+            combined_width = combinations_2x1[cont_i].width + combinations_2x1[cont_j].width
+            combined_height = max(combinations_2x1[cont_i].height, combinations_2x1[cont_j].height)
             combined_image = Image.new("RGB", (combined_width, combined_height))
 
             # Paste the images into the grid
-            combined_image.paste(combinations_2x1[i], (0, 0))
-            combined_image.paste(combinations_2x1[j], (combinations_2x1[i].width, 0))
-
-            hash_value = hash(combined_image.tobytes())
+            combined_image.paste(combinations_2x1[cont_i], (0, 0))
+            combined_image.paste(combinations_2x1[cont_j], (combinations_2x1[cont_i].width, 0))
 
             # Save the combined image with a new name to the "output" folder
-            combination_name = f"combination_1x2_{i}_{j}.png"
+            combination_name = f"combination_1x2_{cont_i}_{cont_j}.png"
             combination_path = os.path.join(output_folder, combination_name)
             combined_image.save(combination_path)
 
@@ -196,8 +193,54 @@ def create_combinations_version2():
         combined_image.close()
 
 
+def create_permutations():
+    # Get the current working directory as the base folder path
+    base_folder = os.getcwd()
+
+    # Create the "output" folder if it doesn't exist
+    output_folder = os.path.join(base_folder, "output")
+    os.makedirs(output_folder, exist_ok=True)
+
+    # Get a list of file names in the specified folder
+    file_names = [filename for filename in os.listdir(base_folder) if
+                  filename.startswith("figure") and filename.endswith(".png")]
+
+    # Open all images and store them in a list
+    images = [Image.open(os.path.join(base_folder, file_name)) for file_name in file_names]
+
+    # Get all permutations of the images
+    image_permutations = permutations(images, 4)
+
+    cont = 0
+    # Loop through all permutations
+    for permutation in list(image_permutations):
+        # Create a new image with a 2x2 grid
+        combined_width = permutation[0].width * 2
+        combined_height = permutation[0].height * 2
+        combined_image = Image.new("RGB", (combined_width, combined_height))
+
+        # Paste the images into the grid
+        combined_image.paste(permutation[0], (0, 0))
+        combined_image.paste(permutation[1], (permutation[0].width, 0))
+        combined_image.paste(permutation[2], (0, permutation[0].height))
+        combined_image.paste(permutation[3], (permutation[0].width, permutation[0].height))
+
+        # Save the combined image with a new name to the "output" folder
+        # combination_name = f"permutation_{file_names.index(permutation[0].filename)}_{file_names.index(permutation[1].filename)}_{file_names.index(permutation[2].filename)}_{file_names.index(permutation[3].filename)}.png"
+        combination_name = f"permutation_{cont}.png"
+        cont = cont + 1
+        print(f"file created: {combination_name}")
+        combination_path = os.path.join(output_folder, combination_name)
+        combined_image.save(combination_path)
+
+    # Close all opened images
+    for image in images:
+        image.close()
+
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     generate_box()
     generate_figures()
-    create_combinations_version2()
+    # create_combinations_version2()
+    create_permutations()
