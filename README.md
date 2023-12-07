@@ -1,6 +1,6 @@
 # k-dron-generator
 
-Based in what some documentation, this code try to generated all the possible combinations for the k.dron game.
+Based in documentation, this code try to generated all the possible combinations for the k.dron game.
 
 As a reference, this link explains more details
 
